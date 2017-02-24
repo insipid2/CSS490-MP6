@@ -19,8 +19,6 @@ function MyGame() {
     
     // 0: hero, 1-5: enemies
     this.mObjects = [];
-    this.mHero = null;
-    this.mEnemies = [];
     
     // inidicates which object is currently selected
     // 0: hero, 1-5: enemies
@@ -50,14 +48,16 @@ MyGame.prototype.initialize = function () {
     );
     this.mCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
        
-    this.mHero = new Hero(this.kMinionSprite);
-    this.mObjects.push(this.mHero);
+    for (var i = 0; i < 3; i++) {
+        this.mHero = new Hero(this.kMinionSprite);
+        this.mObjects.push(this.mHero);
+    }
     
-    for(var i = 1; i < 6; i++) {
-        this.mObjects.push(new Wing(this.kMinionSprite));
-        this.mObjects[i].getXform().setPosition(Math.random() * 80 + 10, Math.random() * 55 + 10);
-    }    
     
+//    for(var i = 1; i < 6; i++) {
+//        this.mObjects.push(new Wing(this.kMinionSprite));
+//        this.mObjects[i].getXform().setPosition(Math.random() * 80 + 10, Math.random() * 55 + 10);
+//    }    
     
     this.mMsg = new FontRenderable("Status Message");
     this.mMsg.setColor([0, 0, 0, 1]);
@@ -92,7 +92,7 @@ MyGame.prototype.update = function () {
 
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Right)) {
         this.kSelected++;
-        if (this.kSelected > 5) {
+        if (this.kSelected > this.mObjects.length - 1) {
             this.kSelected = 0;
         }
     }
@@ -100,7 +100,7 @@ MyGame.prototype.update = function () {
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Left)) {
         this.kSelected--;
         if (this.kSelected < 0) {
-            this.kSelected = 5;
+            this.kSelected = this.mObjects.length - 1;
         }
     }
     
@@ -155,9 +155,9 @@ MyGame.prototype.update = function () {
         }
     }
     
-    for (var i = 0; i < this.mObjects.length; i++) {
-        this.mObjects[i].update();
-    }
+   
+    this.mObjects[this.kSelected].update();
+
 
     msg += echo;
     this.mMsg.setText(msg);
