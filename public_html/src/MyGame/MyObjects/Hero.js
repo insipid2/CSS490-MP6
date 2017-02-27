@@ -21,6 +21,7 @@ function Hero(spriteTexture) {
     GameObject.call(this, this.mDye);
     this.mRect = new RigidRectangle(this.getXform());
     this.mCirc = new RigidCircle(this.getXform());
+    this.update();
 }
 gEngine.Core.inheritPrototype(Hero, GameObject);
 

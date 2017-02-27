@@ -59,34 +59,68 @@ Wing.prototype.update = function (x, y) {
 };
 
 Wing.prototype.update = function (aCamera) {
-    // wing movement
-    var xform = this.getXform();
-    var pos = xform.getPosition();
-    var radius = this.mCirc.getRadius();
-    var dirX = this.getCurrentFrontDir()[0];
-    var dirY = this.getCurrentFrontDir()[1];
-    if (pos[0] + radius > 100) {
-        dirX *= -1;
-        pos[0] = 100 - radius;
-    }
-    else if (pos[0] - radius < 0) {
-        dirX *= -1;
-        pos[0] = 0 + radius;
-    }
-    if (pos[1] + radius > 75) {
-        dirY *= -1;
-    }
-    else if (pos[1] - radius < 0) {
-        dirY *= -1;
-    }
-    this.setCurrentFrontDir(vec2.fromValues(dirX, dirY));
-    vec2.scaleAndAdd(pos, pos, this.getCurrentFrontDir(), this.getSpeed());
     
-    // wing rotation
-    if (xform.getRotationInRad() > 1.0 || xform.getRotationInRad() < -1.0) {
-        this.kRotateSpeed *= -1;
+    // * keyboard movement - WASD *
+    var xform = this.getXform();
+    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.W)) {
+        if (xform.getYPos() + this.mCirc.getRadius() < 75) {
+            xform.incYPosBy(this.kDelta);
+        }
+        
     }
-    xform.incRotationByRad(this.kRotateSpeed);
+    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.S)) {
+        if (xform.getYPos() - this.mCirc.getRadius() > 0) {
+            xform.incYPosBy(-this.kDelta);
+        }
+        
+    }
+    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.A)) {
+        if (xform.getXPos() - this.mCirc.getRadius() > 0) {
+            xform.incXPosBy(-this.kDelta);
+        }
+    }
+    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.D)) {
+        if (xform.getXPos() + this.mCirc.getRadius() < 100) {
+            xform.incXPosBy(this.kDelta);
+        }
+    }
+    
+    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Z)) {
+        xform.incRotationByDegree(this.kDelta);
+    }
+    
+    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.X)) {
+        xform.incRotationByDegree(-this.kDelta);
+    }
+//    // wing auto movement
+//    var xform = this.getXform();
+//    var pos = xform.getPosition();
+//    var radius = this.mCirc.getRadius();
+//    var dirX = this.getCurrentFrontDir()[0];
+//    var dirY = this.getCurrentFrontDir()[1];
+//    if (pos[0] + radius > 100) {
+//        dirX *= -1;
+//        pos[0] = 100 - radius;
+//    }
+//    else if (pos[0] - radius < 0) {
+//        dirX *= -1;
+//        pos[0] = 0 + radius;
+//    }
+//    if (pos[1] + radius > 75) {
+//        dirY *= -1;
+//    }
+//    else if (pos[1] - radius < 0) {
+//        dirY *= -1;
+//    }
+//    this.setCurrentFrontDir(vec2.fromValues(dirX, dirY));
+//    vec2.scaleAndAdd(pos, pos, this.getCurrentFrontDir(), this.getSpeed());
+//    
+//    // wing rotation
+//    if (xform.getRotationInRad() > 1.0 || xform.getRotationInRad() < -1.0) {
+//        this.kRotateSpeed *= -1;
+//    }
+//    
+//    xform.incRotationByRad(this.kRotateSpeed);
     
     // toggle texture drawing
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.T)) {

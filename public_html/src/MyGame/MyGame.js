@@ -48,8 +48,13 @@ MyGame.prototype.initialize = function () {
     );
     this.mCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
        
+    // create 3 rectangles (Hero) and 3 circles (Wing)
+    // Rectangles are 0, 2, 4
+    // Circles are 1, 3, 5
     for (var i = 0; i < 3; i++) {
         this.mHero = new Hero(this.kMinionSprite);
+        this.mObjects.push(this.mHero);
+        this.mHero = new Wing(this.kMinionSprite);
         this.mObjects.push(this.mHero);
     }
     
@@ -61,8 +66,8 @@ MyGame.prototype.initialize = function () {
     
     this.mMsg = new FontRenderable("Status Message");
     this.mMsg.setColor([0, 0, 0, 1]);
-    this.mMsg.getXform().setPosition(5, 5);
-    this.mMsg.setTextHeight(3);
+    this.mMsg.getXform().setPosition(1.2, 1.2);
+    this.mMsg.setTextHeight(2);
 };
 
 // This is the draw function, make sure to setup proper drawing environment, and more
