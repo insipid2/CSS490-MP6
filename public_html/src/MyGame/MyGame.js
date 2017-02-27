@@ -55,8 +55,12 @@ MyGame.prototype.initialize = function () {
         this.mHero = new Hero(this.kMinionSprite);
         this.mObjects.push(this.mHero);
         this.mHero = new Wing(this.kMinionSprite);
+        // set radius?
         this.mObjects.push(this.mHero);
     }
+    
+    // initial object layout
+    // this.mObjects[0].getXform().setPosition()
     
     
 //    for(var i = 1; i < 6; i++) {
