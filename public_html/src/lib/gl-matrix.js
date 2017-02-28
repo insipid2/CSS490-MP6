@@ -462,6 +462,28 @@ vec2.rotate = function(out, a, c){
 };
 
 /**
+ * Rotate a 2D vector (around the z-axis)
+ * @param {vec2} out The receiving vec3
+ * @param {vec2} a The vec2 point to rotate
+ * @param {vec2} b The origin of the rotation
+ * @param {Number} c The angle of rotation
+ * @returns {vec2} out
+ */
+vec2.rotateWRT = function(out, a, c, pt){
+  	var r=[];
+        
+        vec2.subtract(r, a, pt);
+        vec2.rotate(r, r, c);
+        vec2.add(r, r, pt);
+  
+        out[0] = r[0];
+        out[1] = r[1];
+
+  	return r;
+};
+
+
+/**
  * Normalize a vec2
  *
  * @param {vec2} out the receiving vector
@@ -656,17 +678,6 @@ vec2.forEach = (function() {
  */
 vec2.str = function (a) {
     return 'vec2(' + a[0].toPrecision(3) + ', ' + a[1].toPrecision(3) + ')';
-};
-
-vec2.rotateWRT = function(out, a, c, pt){
-
-    var r = [];
-    vec2.subtract(r, a, pt);
-    vec2.rotate(r, r, c);
-    vec2.add(r, r, pt);
-    out[0] = r[0];
-    out[1] = r[1];
-    return r;
 };
 
 if(typeof(exports) !== 'undefined') {

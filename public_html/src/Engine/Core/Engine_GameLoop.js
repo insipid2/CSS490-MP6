@@ -12,6 +12,7 @@ var gEngine = gEngine || { };
 
 gEngine.GameLoop = (function () {
     var kFPS = 60;          // Frames per second
+    var kFrameTime = 1 / kFPS;
     var kMPF = 1000 / kFPS; // Milliseconds per frame.
 
     // Variables for timing gameloop.
@@ -79,10 +80,15 @@ gEngine.GameLoop = (function () {
     var stop = function () {
         mIsLoopRunning = false;
     };
+    
+    var getUpdateIntervalInSeconds = function () {
+        return kFrameTime;
+    };
 
     var mPublic = {
         start: start,
-        stop: stop
+        stop: stop,
+        getUpdateIntervalInSeconds: getUpdateIntervalInSeconds
     };
     return mPublic;
 }());
