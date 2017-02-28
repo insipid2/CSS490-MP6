@@ -12,6 +12,7 @@
 
 function GameObjectSet() {
     this.mSet = [];
+    this.mCollisions = [];
     this.mHasCollision = false;
     this.mSelectedObj = 0;
 }
@@ -22,12 +23,27 @@ GameObjectSet.prototype.getObjectAt = function (index) {
     return this.mSet[index];
 };
 
+GameObjectSet.prototype.getSelectedObject = function () {
+    return this.mSet[this.mSelectedObj];
+};
+
+GameObjectSet.prototype.getSelectedIndex = function () {
+    return this.mSelectedObj;
+};
+
 GameObjectSet.prototype.addToSet = function (obj) {
     this.mSet.push(obj);
 };
 
 GameObjectSet.prototype.hasCollision = function () {
     return this.mHasCollision;
+};
+
+GameObjectSet.prototype.increaseBound = function(delta) {
+    var s = this.mSet[this.mSelectedObj].getRigidBody();
+    var r = s.getBoundRadius();
+    r += delta;
+    s.setBoundRadius(r);
 };
 
 GameObjectSet.prototype.update = function (aCamera) {
@@ -58,6 +74,9 @@ GameObjectSet.prototype.update = function (aCamera) {
             
             if (this.mSet[i].getRigidBody().boundTest(this.mSet[j].getRigidBody())) {
                 this.mHasCollision = true;
+                // create a new collision info
+                // just make it draw a line connecting center of circles
+                // this.mCollisions.push()
             }
         }
     }

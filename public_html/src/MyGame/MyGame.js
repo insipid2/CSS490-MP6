@@ -17,11 +17,15 @@ function MyGame() {
     // The camera to view the scene
     this.mCamera = null;
 
-    this.mMsg = null;
+    // message text
+    this.mMsg1 = null;
+    this.mMsg2 = null;
+    this.mNumFormat = null;
 
+    // GameObjectSet containing all shapes
     this.mAllObjs = null;
-    this.mHero = null;
     
+    // for selecting
     this.mCurrentObj = 0;
 }
 gEngine.Core.inheritPrototype(MyGame, Scene);
@@ -48,20 +52,27 @@ MyGame.prototype.initialize = function () {
     
     this.mAllObjs = new GameObjectSet();
     
-    for (var i = 0; i < 3; i++) {
-        // no longer randomized locations
-//        var x = 20 + 60 * Math.random();
-//        var y = 15 + 45 * Math.random();
-        this.mHero = new Hero(this.kMinionSprite);
-        this.mAllObjs.addToSet(this.mHero);
-        var m = new Minion(this.kMinionSprite, 50, 50);
-        this.mAllObjs.addToSet(m);
-    }
+    // create 3 rectangles, 3 circles, set to initial positions
+    this.mAllObjs.addToSet(new Hero(this.kMinionSprite, 20, 20));
+    this.mAllObjs.addToSet(new Minion(this.kMinionSprite, 20, 55));
+    this.mAllObjs.addToSet(new Hero(this.kMinionSprite, 50, 20));
+    this.mAllObjs.addToSet(new Minion(this.kMinionSprite, 50, 55));
+    this.mAllObjs.addToSet(new Hero(this.kMinionSprite, 80, 20));
+    this.mAllObjs.addToSet(new Minion(this.kMinionSprite, 80, 55));
+        
+//        this.mHero = new Hero(this.kMinionSprite, 20, 20);
+//        this.mAllObjs.addToSet(this.mHero);
+//        var m = new Minion(this.kMinionSprite, 50, 50);
+//        this.mAllObjs.addToSet(m);
+    
 
-    this.mMsg = new FontRenderable("Status Message");
-    this.mMsg.setColor([0, 0, 0, 1]);
-    this.mMsg.getXform().setPosition(2, 5);
-    this.mMsg.setTextHeight(3);
+    this.mNumFormat = new Intl.NumberFormat("en-US",
+            {style: "decimal", minimumFractionDigits: 1,
+                maximumFractionDigits: 1});
+    this.mMsg1 = new FontRenderable("Status Message");
+    this.mMsg1.setColor([0, 0, 0, 1]);
+    this.mMsg1.getXform().setPosition(2, 5);
+    this.mMsg1.setTextHeight(1.5);
 };
 
 // This is the draw function, make sure to setup proper drawing environment, and more
@@ -73,21 +84,22 @@ MyGame.prototype.draw = function () {
     this.mCamera.setupViewProjection();
     
     this.mAllObjs.draw(this.mCamera);
-    this.mMsg.draw(this.mCamera);   // only draw status in the main camera
+    this.mMsg1.draw(this.mCamera);   // only draw status in the main camera
 };
 
-MyGame.prototype.increaseBound = function(delta) {
-    var s = this.mAllObjs.getObjectAt(this.mCurrentObj).getRigidBody();
-    var r = s.getBoundRadius();
-    r += delta;
-    s.setBoundRadius(r);
-};
+// **moved into GameObjectSet**
+//MyGame.prototype.increaseBound = function(delta) {
+//    var s = this.mAllObjs.getObjectAt(this.mCurrentObj).getRigidBody();
+//    var r = s.getBoundRadius();
+//    r += delta;
+//    s.setBoundRadius(r);
+//};
 
 // The Update function, updates the application state. Make sure to _NOT_ draw
 // anything from this function!
 MyGame.kBoundDelta = 0.1;
 MyGame.prototype.update = function () {
-    var msg = "Num: " + this.mAllObjs.size() + " Current=" + this.mCurrentObj;   
+    var msg = "Total Objects: " + this.mAllObjs.size() + " | Current: " + this.mAllObjs.getSelectedIndex();   
 //    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Right)) {
 //        this.mCurrentObj = (this.mCurrentObj + 1) % 6;
 //    }
@@ -97,17 +109,17 @@ MyGame.prototype.update = function () {
 //            this.mCurrentObj = 5;
 //    }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Up)) {
-        this.increaseBound(MyGame.kBoundDelta);
+        this.mAllObjs.increaseBound(MyGame.kBoundDelta);
     }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Down)) {
-        this.increaseBound(-MyGame.kBoundDelta);
+        this.mAllObjs.increaseBound(-MyGame.kBoundDelta);
     }
     
     //this.mAllObjs.getObjectAt(this.mCurrentObj).update(this.mCamera);
     this.mAllObjs.update(this.mCamera);
     gEngine.Physics.processCollision(this.mAllObjs);
 
-    msg += " R=" + this.mAllObjs.getObjectAt(this.mCurrentObj).getRigidBody().getBoundRadius();
-    msg += " Has Collision: " + this.mAllObjs.hasCollision();
-    this.mMsg.setText(msg);
+    msg += " | Radius: " + this.mNumFormat.format(this.mAllObjs.getSelectedObject().getRigidBody().getBoundRadius());
+    msg += " | Collision Detected: " + this.mAllObjs.hasCollision();
+    this.mMsg1.setText(msg);
 };
