@@ -70,13 +70,20 @@ GameObjectSet.prototype.update = function (aCamera) {
     
     for (var i = 0; i < this.mSet.length; i++) {
         for(var j = i + 1; j < this.mSet.length; j ++) {
-            // we have a broad phase collision here
-            
+            // test for broad phase collision
             if (this.mSet[i].getRigidBody().boundTest(this.mSet[j].getRigidBody())) {
                 this.mHasCollision = true;
                 // create a new collision info
                 // just make it draw a line connecting center of circles
                 // this.mCollisions.push()
+                var ci = new CollisionInfo();
+                // set the collision info based on i and j objects
+                // then add it to array
+                // then draw the array in our draw
+                // once drawn, empty the array (during draw())
+// d, n, s
+//                ci.setInfo(this.mSet[j].)
+//                this.mCollisions.push();
             }
         }
     }

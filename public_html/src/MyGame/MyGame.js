@@ -59,12 +59,6 @@ MyGame.prototype.initialize = function () {
     this.mAllObjs.addToSet(new Minion(this.kMinionSprite, 50, 55));
     this.mAllObjs.addToSet(new Hero(this.kMinionSprite, 80, 20));
     this.mAllObjs.addToSet(new Minion(this.kMinionSprite, 80, 55));
-        
-//        this.mHero = new Hero(this.kMinionSprite, 20, 20);
-//        this.mAllObjs.addToSet(this.mHero);
-//        var m = new Minion(this.kMinionSprite, 50, 50);
-//        this.mAllObjs.addToSet(m);
-    
 
     this.mNumFormat = new Intl.NumberFormat("en-US",
             {style: "decimal", minimumFractionDigits: 1,
