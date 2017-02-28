@@ -88,14 +88,14 @@ MyGame.prototype.increaseBound = function(delta) {
 MyGame.kBoundDelta = 0.1;
 MyGame.prototype.update = function () {
     var msg = "Num: " + this.mAllObjs.size() + " Current=" + this.mCurrentObj;   
-    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Right)) {
-        this.mCurrentObj = (this.mCurrentObj + 1) % 6;
-    }
-    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Left)) {
-        this.mCurrentObj = (this.mCurrentObj - 1);
-        if (this.mCurrentObj < 0)
-            this.mCurrentObj = 5;
-    }
+//    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Right)) {
+//        this.mCurrentObj = (this.mCurrentObj + 1) % 6;
+//    }
+//    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Left)) {
+//        this.mCurrentObj = (this.mCurrentObj - 1);
+//        if (this.mCurrentObj < 0)
+//            this.mCurrentObj = 5;
+//    }
     if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Up)) {
         this.increaseBound(MyGame.kBoundDelta);
     }
@@ -103,9 +103,11 @@ MyGame.prototype.update = function () {
         this.increaseBound(-MyGame.kBoundDelta);
     }
     
-    this.mAllObjs.getObjectAt(this.mCurrentObj).update(this.mCamera);    
+    //this.mAllObjs.getObjectAt(this.mCurrentObj).update(this.mCamera);
+    this.mAllObjs.update(this.mCamera);
     gEngine.Physics.processCollision(this.mAllObjs);
 
     msg += " R=" + this.mAllObjs.getObjectAt(this.mCurrentObj).getRigidBody().getBoundRadius();
+    msg += " Has Collision: " + this.mAllObjs.hasCollision();
     this.mMsg.setText(msg);
 };
