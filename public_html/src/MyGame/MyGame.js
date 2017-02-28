@@ -45,13 +45,16 @@ MyGame.prototype.initialize = function () {
     this.mCamera.setBackgroundColor([0.8, 0.8, 0.8, 1]);
             // sets the background to gray
     
-    this.mHero = new Hero(this.kMinionSprite);
+    
     this.mAllObjs = new GameObjectSet();
-    this.mAllObjs.addToSet(this.mHero);
-    for (var i = 1; i<=5; i++) {
-        var x = 20 + 60 * Math.random();
-        var y = 15 + 45 * Math.random();
-        var m = new Minion(this.kMinionSprite, x, y);
+    
+    for (var i = 0; i < 3; i++) {
+        // no longer randomized locations
+//        var x = 20 + 60 * Math.random();
+//        var y = 15 + 45 * Math.random();
+        this.mHero = new Hero(this.kMinionSprite);
+        this.mAllObjs.addToSet(this.mHero);
+        var m = new Minion(this.kMinionSprite, 50, 50);
         this.mAllObjs.addToSet(m);
     }
 
@@ -100,7 +103,7 @@ MyGame.prototype.update = function () {
         this.increaseBound(-MyGame.kBoundDelta);
     }
     
-    this.mAllObjs.update(this.mCamera);    
+    this.mAllObjs.getObjectAt(this.mCurrentObj).update(this.mCamera);    
     gEngine.Physics.processCollision(this.mAllObjs);
 
     msg += " R=" + this.mAllObjs.getObjectAt(this.mCurrentObj).getRigidBody().getBoundRadius();

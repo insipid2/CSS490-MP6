@@ -16,7 +16,9 @@ Minion.kRotateDelta = 0.01;
 Minion.kRotateLimit = 1.0; // Rad
 
 function Minion(spriteTexture, atX, atY) {
-    this.mRotDelta = Minion.kRotateDelta * Math.random();
+    this.kDelta = 0.3;
+    
+    // this.mRotDelta = Minion.kRotateDelta * Math.random();
     
     this.mMinion = new SpriteAnimateRenderable(spriteTexture);
     this.mMinion.setColor([1, 1, 1, 0]);
@@ -33,11 +35,11 @@ function Minion(spriteTexture, atX, atY) {
     GameObject.call(this, this.mMinion);
     
     var r = new RigidCircle(this.getXform(), 4);
-    var vx = Minion.kMoveDelta * (Math.random() - 0.5);
-    var vy = Minion.kMoveDelta * (Math.random() - 0.5);
-    r.setVelocity(vx, vy);
+//    var vx = Minion.kMoveDelta * (Math.random() - 0.5);
+//    var vy = Minion.kMoveDelta * (Math.random() - 0.5);
+//    r.setVelocity(vx, vy);
     
-    this.getXform().setRotationInRad((Math.random()-0.5 * Minion.kRotateLimit));
+    // this.getXform().setRotationInRad((Math.random()-0.5 * Minion.kRotateLimit));
     
     this.setRigidBody(r);
 }
@@ -45,22 +47,39 @@ gEngine.Core.inheritPrototype(Minion, GameObject);
 
 Minion.prototype.update = function (aCamera) {
     GameObject.prototype.update.call(this);
-    // remember to update this.mMinion's animation
-    this.mMinion.updateAnimation();
     
-    var v = this.getRigidBody().getVelocity();
-    var status = aCamera.collideWCBound(this.getXform(), 0.95);
-    if (((status & BoundingBox.eboundCollideStatus.eCollideTop) !== 0) ||
-        ((status & BoundingBox.eboundCollideStatus.eCollideBottom) !== 0) ) {
-            v[1] *= -1;
+    var xform = this.getXform();
+    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.W)) {
+        xform.incYPosBy(this.kDelta);
     }
-    if (((status & BoundingBox.eboundCollideStatus.eCollideRight) !== 0) ||
-        ((status & BoundingBox.eboundCollideStatus.eCollideLeft) !== 0) ) {
-        v[0] *= -1;
+    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.S)) {
+        xform.incYPosBy(-this.kDelta);
     }
+    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.A)) {
+        xform.incXPosBy(-this.kDelta);
+    }
+    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.D)) {
+        xform.incXPosBy(this.kDelta);
+    }
+    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.Z)) {
+        xform.incRotationByDegree(1);
+    }
+    if (gEngine.Input.isKeyPressed(gEngine.Input.keys.X)) {
+        xform.incRotationByDegree(-1);
+    }
+
+// don't care about animation anymore, just wire frames
+    // this.mMinion.updateAnimation();
     
-    var r = this.getXform().getRotationInRad();
-    if ((r > Minion.kRotateLimit) || (r < -Minion.kRotateLimit) )
-        this.mRotDelta *= -1;    
-    this.getXform().incRotationByRad(this.mRotDelta);
+//    var v = this.getRigidBody().getVelocity();
+//    var status = aCamera.collideWCBound(this.getXform(), 0.95);
+//    if (((status & BoundingBox.eboundCollideStatus.eCollideTop) !== 0) ||
+//        ((status & BoundingBox.eboundCollideStatus.eCollideBottom) !== 0) ) {
+//            v[1] *= -1;
+//    }
+//    if (((status & BoundingBox.eboundCollideStatus.eCollideRight) !== 0) ||
+//        ((status & BoundingBox.eboundCollideStatus.eCollideLeft) !== 0) ) {
+//        v[0] *= -1;
+//    }
+    
 };
