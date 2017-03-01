@@ -75,7 +75,7 @@ CollisionInfo.prototype.setInfo = function (d, n, s) {
     vec2.scaleAndAdd(this.mEnd, s, n, -d);
     // x1, y1, x2, y2
     this.mLine = new LineRenderable(s[0], s[1], this.mEnd[0], this.mEnd[1]);
-    // this.mLine.setColor([1, 0, 0, 1]);
+    this.mLine.setColor([1, 0, 1, 1]);
 };
 
 /**

@@ -131,6 +131,8 @@ GameObjectSet.prototype.draw = function (aCamera) {
     }
     while (this.mCollisions.length > 0) {
         collision = this.mCollisions.pop();
-        collision.draw(aCamera);
+        if (collision.getDepth() > 0) {
+            collision.draw(aCamera);
+        }
     }
 };
