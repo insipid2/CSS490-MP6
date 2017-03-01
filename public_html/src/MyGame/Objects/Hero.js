@@ -17,11 +17,11 @@ function Hero(spriteTexture, atX, atY) {
     this.mDye = new SpriteRenderable(spriteTexture);
     this.mDye.setColor([1, 1, 1, 0]);
     this.mDye.getXform().setPosition(atX, atY);
-    this.mDye.getXform().setSize(9, 12);
+    this.mDye.getXform().setSize(15, 20);
     this.mDye.setElementPixelPositions(0, 120, 0, 180);
     GameObject.call(this, this.mDye);
     
-    var r = new RigidRectangle(this.getXform(), 9, 12);
+    var r = new RigidRectangle(this.getXform(), 15, 20);
     this.setRigidBody(r);
 }
 gEngine.Core.inheritPrototype(Hero, GameObject);

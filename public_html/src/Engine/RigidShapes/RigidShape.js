@@ -11,6 +11,7 @@ function RigidShape(xf) {
     this.mXform = xf;
     this.mVelocity = vec2.fromValues(0, 0);
     this.mBoundRadius = 0;
+    this.mBoundShow = true;
     this.mShape = null;
 }
 
@@ -19,6 +20,11 @@ RigidShape.prototype.setBoundRadius = function(r) {
 };
 RigidShape.prototype.getBoundRadius = function() {
     return this.mBoundRadius;
+};
+
+RigidShape.prototype.toggleBoundShow = function() {
+    this.mBoundShow = !this.mBoundShow;
+    console.log("toggled to: " + this.mBoundShow);
 };
 
 RigidShape.prototype.setVelocity = function(x, y) {

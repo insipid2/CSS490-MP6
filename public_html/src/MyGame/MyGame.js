@@ -112,8 +112,16 @@ MyGame.prototype.update = function () {
     //this.mAllObjs.getObjectAt(this.mCurrentObj).update(this.mCamera);
     this.mAllObjs.update(this.mCamera);
     // gEngine.Physics.processCollision(this.mAllObjs);
-
-    msg += " | Radius: " + this.mNumFormat.format(this.mAllObjs.getSelectedObject().getRigidBody().getBoundRadius());
+    
+    msg += " | Bound Radius: " + this.mNumFormat.format(this.mAllObjs.getSelectedObject().getRigidBody().mBoundRadius);
+    if (this.mAllObjs.getSelectedObject().getRigidBody().mType === "RigidCircle") {
+        msg += " | Radius: " + this.mNumFormat.format(this.mAllObjs.getSelectedObject().getRigidBody().mRadius);
+    }
+    else {
+        msg += " | Width: " + this.mAllObjs.getSelectedObject().getXform().getWidth();
+        msg += ", Height: " + this.mAllObjs.getSelectedObject().getXform().getHeight();
+    }
+    
     msg += " | Collision Detected: " + this.mAllObjs.hasCollision();
     this.mMsg1.setText(msg);
 };

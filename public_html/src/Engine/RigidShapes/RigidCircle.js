@@ -30,7 +30,7 @@ RigidCircle.prototype.getRadius = function () {
 RigidCircle.prototype.draw = function (aCamera) {
     RigidShape.prototype.draw.call(this, aCamera);
     
-    // kNumSides forms the circle.
+    // draw shape in black
     this.mLine.setColor([0, 0, 0, 1]);
     this.drawCircle(aCamera, this.mRadius);
     
@@ -43,7 +43,9 @@ RigidCircle.prototype.draw = function (aCamera) {
     this.mLine.setSecondVertex(u[0], u[1]);
     this.mLine.draw(aCamera);
     
-    this.drawCircle(aCamera, this.mBoundRadius);
+    if (this.mBoundShow) {
+        this.drawCircle(aCamera, this.mBoundRadius);
+    }
 };
 
 RigidCircle.prototype.update = function () {

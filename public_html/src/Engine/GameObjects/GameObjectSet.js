@@ -61,19 +61,31 @@ GameObjectSet.prototype.update = function (aCamera) {
             this.mSelectedObj = this.mSet.length - 1;
         }
     }
+    
+    if (gEngine.Input.isKeyClicked(gEngine.Input.keys.B)) {
+        for (var i = 0; i < this.mSet.length; i++) {
+            this.mSet[i].getRigidBody().toggleBoundShow();
+        }
+    }
 
     this.mSet[this.mSelectedObj].update(aCamera);
 
     var ci = null;
     var c1Pos = null;
     var c2Pos = null;
+    var depth = null;
+    var normal = [0, 0];
+    var start = [0, 0];
+    
+    // circle vars   
     var c1Rad = null;
     var c2Rad = null;
     var radsum = null;
     var dist = null;
-    var depth = null;
-    var normal = [0, 0];
-    var start = [0, 0];
+    
+    // rectangle vars
+    var ciR1 = null;
+    var ciR2 = null;
 
     for (var i = 0; i < this.mSet.length; i++) {
         for (var j = i + 1; j < this.mSet.length; j++) {
@@ -106,7 +118,7 @@ GameObjectSet.prototype.update = function (aCamera) {
                     console.log("c1x: " + c1Pos[0] + ", c1y: " + c1Pos[1]);
                     console.log("radsum: " + radsum + ", dist: " + dist + ", depth: " + depth + ", normal: " + normal);
                     ci = new CollisionInfo();
-                    ci.setInfo(depth, normal, start);
+                    ci.setInfo(depth, normal, start, [1, 0, 1, 1]);
                     this.mCollisions.push(ci);
                 }
                 else if (this.mSet[i].getRigidBody().mType === "RigidCircle" &&

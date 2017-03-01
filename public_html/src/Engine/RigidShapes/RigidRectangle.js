@@ -90,8 +90,10 @@ RigidRectangle.prototype.draw = function (aCamera) {
         this.drawAnEdge(i, (i+1)%4, aCamera);
     }
     
-    this.mLine.setColor([1, 1, 1, 1]);
-    this.drawCircle(aCamera, this.mBoundRadius);
+    if (this.mBoundShow) {
+        this.mLine.setColor([1, 1, 1, 1]);
+        this.drawCircle(aCamera, this.mBoundRadius);
+    }
 };
 
 RigidRectangle.prototype.update = function () {

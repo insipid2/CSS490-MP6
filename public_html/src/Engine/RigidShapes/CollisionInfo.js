@@ -18,6 +18,7 @@ function CollisionInfo() {
     this.mStart = vec2.fromValues(0, 0);
     this.mEnd = vec2.fromValues(0, 0);
     this.mLine = null;
+    this.mStartMark = null;
 }
 
 /**
@@ -66,7 +67,7 @@ CollisionInfo.prototype.getNormal = function () {
  * @param {Vec2} s the startpoint of the CollisionInfo
  * @returns {void}
  */
-CollisionInfo.prototype.setInfo = function (d, n, s) {
+CollisionInfo.prototype.setInfo = function (d, n, s, color) {
     this.mDepth = d;
     this.mNormal = n;
     this.mStart = s;
@@ -76,6 +77,10 @@ CollisionInfo.prototype.setInfo = function (d, n, s) {
     // x1, y1, x2, y2
     this.mLine = new LineRenderable(s[0], s[1], this.mEnd[0], this.mEnd[1]);
     this.mLine.setColor([1, 0, 1, 1]);
+    this.mStartMark = new Renderable();
+    this.mStartMark.getXform().setPosition(this.mStart[0], this.mStart[1]);
+    this.mStartMark.getXform().setSize(0.75, 0.75);
+    this.mStartMark.setColor(color);
 };
 
 /**
@@ -92,4 +97,5 @@ CollisionInfo.prototype.changeDir = function () {
 
 CollisionInfo.prototype.draw = function (aCamera) {
     this.mLine.draw(aCamera);
+    this.mStartMark.draw(aCamera);
 };

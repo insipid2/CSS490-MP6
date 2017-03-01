@@ -34,7 +34,7 @@ function Minion(spriteTexture, atX, atY) {
 
     GameObject.call(this, this.mMinion);
     
-    var r = new RigidCircle(this.getXform(), 4);
+    var r = new RigidCircle(this.getXform(), 12);
 //    var vx = Minion.kMoveDelta * (Math.random() - 0.5);
 //    var vy = Minion.kMoveDelta * (Math.random() - 0.5);
 //    r.setVelocity(vx, vy);
