@@ -109,18 +109,18 @@ GameObjectSet.prototype.update = function (aCamera) {
                     ci.setInfo(depth, normal, start);
                     this.mCollisions.push(ci);
                 }
-
-
-                // set the collision info based on i and j objects
-                // then add it to array
-                // then draw the array in our draw
-                // once drawn, empty the array (during draw())
-                // depth, normal, start
-//                 ci.setInfo(this.mSet[i].getRigidBody().getRadius() + this.mSet[j].getRigidBody().getRadius() - 
-//                         vec2.distance(this.mSet[i].getXform().getPosition(), this.mSet[j].getXform().getPosition()), 
-//                         vec2.subtract(out, this.mSet[i].getXform().getPosition(), this.mCollisions[j].getXform().getPosition()),
-//                         vec2.add(out, this.mCollisions[j].getXform().getPosition))
-//                this.mCollisions.push();
+                else if (this.mSet[i].getRigidBody().mType === "RigidCircle" &&
+                        this.mSet[j].getRigidBody().mType === "RigidRectangle") {
+                    // Circle - Rectangle collision
+                }
+                else if (this.mSet[i].getRigidBody().mType === "RigidRectangle" &&
+                        this.mSet[j].getRigidBody().mType === "RigidCircle") {
+                    // Rectangle - Circle collision
+                }                
+                else if (this.mSet[i].getRigidBody().mType === "RigidRectangle" &&
+                        this.mSet[j].getRigidBody().mType === "RigidRectangle"){
+                    // Rectangle - Rectangle collision
+                }
             }
         }
     }
