@@ -11,6 +11,7 @@ function RigidShape(xf) {
     this.mXform = xf;
     this.mVelocity = vec2.fromValues(0, 0);
     this.mBoundRadius = 0;
+    this.mShape = null;
 }
 
 RigidShape.prototype.setBoundRadius = function(r) {
