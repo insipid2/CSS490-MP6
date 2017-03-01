@@ -50,10 +50,6 @@ GameObjectSet.prototype.update = function (aCamera) {
     this.mHasCollision = false;
     var i;
     
-//    for (i = 0; i < this.mSet.length; i++) {
-//        this.mSet[i].update(aCamera);
-//    }
-    // object selection
     if (gEngine.Input.isKeyClicked(gEngine.Input.keys.Right)) {
         this.mSelectedObj = (this.mSelectedObj + 1) % this.mSet.length;
     }
@@ -65,9 +61,8 @@ GameObjectSet.prototype.update = function (aCamera) {
     }
     
     this.mSet[this.mSelectedObj].update(aCamera);
-    
 
-    
+    var ci = null;
     for (var i = 0; i < this.mSet.length; i++) {
         for(var j = i + 1; j < this.mSet.length; j ++) {
             // test for broad phase collision
@@ -76,7 +71,7 @@ GameObjectSet.prototype.update = function (aCamera) {
                 // create a new collision info
                 // just make it draw a line connecting center of circles
                 // this.mCollisions.push()
-                var ci = new CollisionInfo();
+                ci = new CollisionInfo();
                 // set the collision info based on i and j objects
                 // then add it to array
                 // then draw the array in our draw

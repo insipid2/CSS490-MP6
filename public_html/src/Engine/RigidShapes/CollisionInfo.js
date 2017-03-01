@@ -14,9 +14,9 @@
  */
 function CollisionInfo() {
     this.mDepth = 0;
-    this.mNormal = new Vec2(0, 0);
-    this.mStart = new Vec2(0, 0);
-    this.mEnd = new Vec2(0, 0);
+    this.mNormal = vec2.fromValues(0, 0);
+    this.mStart = vec2.fromValues(0, 0);
+    this.mEnd = vec2.fromValues(0, 0);
     this.mLine = null;
 }
 

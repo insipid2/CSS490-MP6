@@ -111,7 +111,7 @@ MyGame.prototype.update = function () {
     
     //this.mAllObjs.getObjectAt(this.mCurrentObj).update(this.mCamera);
     this.mAllObjs.update(this.mCamera);
-    gEngine.Physics.processCollision(this.mAllObjs);
+    // gEngine.Physics.processCollision(this.mAllObjs);
 
     msg += " | Radius: " + this.mNumFormat.format(this.mAllObjs.getSelectedObject().getRigidBody().getBoundRadius());
     msg += " | Collision Detected: " + this.mAllObjs.hasCollision();
