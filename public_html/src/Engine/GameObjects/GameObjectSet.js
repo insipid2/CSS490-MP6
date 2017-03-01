@@ -92,6 +92,7 @@ GameObjectSet.prototype.update = function (aCamera) {
             // test for broad phase collision
             if (this.mSet[i].getRigidBody().boundTest(this.mSet[j].getRigidBody())) {
                 this.mHasCollision = true;
+                ci = new CollisionInfo();
                 // test for collision type
                 // shape types: RigidCircle, RigidRectangle
                 if (this.mSet[i].getRigidBody().mType === "RigidCircle" &&
@@ -117,7 +118,6 @@ GameObjectSet.prototype.update = function (aCamera) {
                     console.log("c1Pos: " + c1Pos + ", c2Pos: " + c2Pos);
                     console.log("c1x: " + c1Pos[0] + ", c1y: " + c1Pos[1]);
                     console.log("radsum: " + radsum + ", dist: " + dist + ", depth: " + depth + ", normal: " + normal);
-                    ci = new CollisionInfo();
                     ci.setInfo(depth, normal, start, [1, 0, 1, 1]);
                     this.mCollisions.push(ci);
                 }
@@ -132,12 +132,87 @@ GameObjectSet.prototype.update = function (aCamera) {
                 else if (this.mSet[i].getRigidBody().mType === "RigidRectangle" &&
                         this.mSet[j].getRigidBody().mType === "RigidRectangle"){
                     // Rectangle - Rectangle collision
+                    this.findAxisLeastPenetration(this.mSet[i].getRigidBody(), this.mSet[j].getRigidBody(), ci, tmpSupport1);
                 }
             }
         }
     }
 
 
+};
+
+var SupportStruct = function () {
+    this.mSupportPoint = null;
+    this.mSupportPointDist = 0;
+};
+var tmpSupport1 = new SupportStruct();
+var tmpSupport2 = new SupportStruct();
+
+GameObjectSet.prototype.findSupportPoint = function (rec, dir, ptOnEdge, tmpSupport) {
+    //the longest project length
+    var vToEdge;
+    var projection;
+
+    tmpSupport.mSupportPointDist = -9999999;
+    tmpSupport.mSupportPoint = null;
+    //check each vector of other object
+    for (var i = 0; i < rec.mVertex.length; i++) {
+        vToEdge = rec.mVertex[i].subtract(ptOnEdge);
+        projection = vec2.dot(vToEdge, dir);
+        
+        //find the longest distance with certain edge
+        //dir is -n direction, so the distance should be positive       
+        if ((projection > 0) && (projection > tmpSupport.mSupportPointDist)) {
+            tmpSupport.mSupportPoint = rec.mVertex[i];
+            tmpSupport.mSupportPointDist = projection;
+        }
+    }
+};
+
+GameObjectSet.prototype.findAxisLeastPenetration = function (rec1, rec2, collisionInfo, tmpSupport) {
+    var n;
+    var supportPoint;
+    var dir = [0, 0];
+    var ptOnEdge = [0, 0];
+    
+    var bestDistance = 999999;
+    var bestIndex = null;
+
+    var hasSupport = true;
+    var i = 0;
+    
+    var out = [0, 0];
+    
+    while ((hasSupport) && (i < rec1.mFaceNormal.length)) {
+        
+        // get facenormal from rec1
+        n = rec1.mFaceNormal[i];
+        console.log("facenormal: " + n);
+        
+        // get direction, pointing out instead of in
+        vec2.scale(dir, n, -1);
+        ptOnEdge = rec1.mVertex[i];
+        console.log("direction: " + dir);
+        
+        // find support point
+        this.findSupportPoint(rec2, dir, ptOnEdge, tmpSupport);
+        hasSupport = (tmpSupport.mSupportPoint !== null);
+        
+        //get the shortest support point depth
+        if ((hasSupport) && (tmpSupport.mSupportPointDist < bestDistance)) {
+            bestDistance = tmpSupport.mSupportPointDist;
+            bestIndex = i;
+            supportPoint = tmpSupport.mSupportPoint;
+        }
+        i = i + 1;
+    }
+    
+    if (hasSupport) {
+        //all four directions have support point
+        var bestVec = vec2.scale(rec1.mFaceNormal[bestIndex], bestDistance);
+        collisionInfo.setInfo(bestDistance, rec1.mFaceNormal[bestIndex], vec2.add(out, supportPoint, bestVec));
+    }
+    return hasSupport;
 };
 
 GameObjectSet.prototype.draw = function (aCamera) {
