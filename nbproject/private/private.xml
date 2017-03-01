@@ -5,8 +5,11 @@
         <group>
             <file>file:/C:/Users/USER76/Desktop/School/CSS490-GameEngine/Projects/MP6/BrianLortonMP6/public_html/index.html</file>
             <file>file:/C:/Users/USER76/Desktop/School/CSS490-GameEngine/Projects/MP6/BrianLortonMP6/public_html/src/Engine/GameObjects/GameObjectSet.js</file>
+            <file>file:/C:/Users/USER76/Desktop/School/CSS490-GameEngine/Projects/MP6/BrianLortonMP6/public_html/src/Engine/RigidShapes/RigidCircle.js</file>
             <file>file:/C:/Users/USER76/Desktop/School/CSS490-GameEngine/Projects/MP6/BrianLortonMP6/public_html/src/Engine/RigidShapes/CollisionInfo.js</file>
+            <file>file:/C:/Users/USER76/Desktop/School/CSS490-GameEngine/Projects/MP6/BrianLortonMP6/public_html/src/Engine/GameObjects/GameObject.js</file>
             <file>file:/C:/Users/USER76/Desktop/School/CSS490-GameEngine/Projects/MP6/BrianLortonMP6/public_html/src/lib/gl-matrix.js</file>
+            <file>file:/C:/Users/USER76/Desktop/School/CSS490-GameEngine/Projects/MP6/BrianLortonMP6/public_html/src/Engine/RigidShapes/RigidShape.js</file>
         </group>
     </open-files>
 </project-private>

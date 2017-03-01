@@ -63,6 +63,16 @@ GameObjectSet.prototype.update = function (aCamera) {
     this.mSet[this.mSelectedObj].update(aCamera);
 
     var ci = null;
+    var c1Pos = null;
+    var c2Pos = null;
+    var c1Rad = null;
+    var c2Rad = null;
+    var radsum = null;
+    var dist = null;
+    var depth = null;
+    var normal = [0, 0];
+    var start = [0, 0];
+    
     for (var i = 0; i < this.mSet.length; i++) {
         for(var j = i + 1; j < this.mSet.length; j ++) {
             // test for broad phase collision
@@ -71,13 +81,39 @@ GameObjectSet.prototype.update = function (aCamera) {
                 // create a new collision info
                 // just make it draw a line connecting center of circles
                 // this.mCollisions.push()
+                
+                // Circle - Circle collision
+                c1Pos = this.mSet[i].getXform().getPosition();
+                c2Pos = this.mSet[j].getXform().getPosition();
+                c1Rad = this.mSet[i].getRigidBody().getRadius();
+                c2Rad = this.mSet[j].getRigidBody().getRadius();
+                radsum = c1Rad + c2Rad;
+                dist = vec2.distance(c1Pos, c2Pos);
+                depth = radsum - dist;
+                vec2.subtract(normal, c1Pos, c2Pos);
+                console.log("normal 1: " + normal);
+                vec2.normalize(normal, normal);
+                console.log("normal 2: " + normal);
+                vec2.scale(normal, normal, c2Rad);
+                console.log("normal 3: " + normal);
+                vec2.add(start, normal, c2Pos);
+                vec2.normalize(normal, normal);
+                console.log("start: " + start);
+                console.log("c1Pos: " + c1Pos + ", c2Pos: " + c2Pos);
+                console.log("c1x: " + c1Pos[0] + ", c1y: " + c1Pos[1]);
+                console.log("radsum: " + radsum + ", dist: " + dist + ", depth: " + depth + ", normal: " + normal);
                 ci = new CollisionInfo();
+                ci.setInfo(depth, normal, start);
+                this.mCollisions.push(ci);
                 // set the collision info based on i and j objects
                 // then add it to array
                 // then draw the array in our draw
                 // once drawn, empty the array (during draw())
                 // depth, normal, start
-                ci.setInfo(this.mSet[j].)
+//                 ci.setInfo(this.mSet[i].getRigidBody().getRadius() + this.mSet[j].getRigidBody().getRadius() - 
+//                         vec2.distance(this.mSet[i].getXform().getPosition(), this.mSet[j].getXform().getPosition()), 
+//                         vec2.subtract(out, this.mSet[i].getXform().getPosition(), this.mCollisions[j].getXform().getPosition()),
+//                         vec2.add(out, this.mCollisions[j].getXform().getPosition))
 //                this.mCollisions.push();
             }
         }
@@ -88,7 +124,13 @@ GameObjectSet.prototype.update = function (aCamera) {
 
 GameObjectSet.prototype.draw = function (aCamera) {
     var i;
+    var collision;
     for (i = 0; i < this.mSet.length; i++) {
         this.mSet[i].draw(aCamera);
+        
+    }
+    while (this.mCollisions.length > 0) {
+        collision = this.mCollisions.pop();
+        collision.draw(aCamera);
     }
 };

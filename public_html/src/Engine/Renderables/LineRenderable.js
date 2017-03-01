@@ -17,6 +17,7 @@ function LineRenderable(x1, y1, x2, y2) {
     Renderable.prototype.setColor.call(this, [0, 0, 0, 1]);
     Renderable.prototype._setShader.call(this, gEngine.DefaultResources.getLineShader());
 
+    console.log("line constr - x1: " + x1 + ", y1: " + y1 + ", x2: " + x2 + ", y2: " + y2);
     this.mPointSize = 1;
     this.mDrawVertices = false;
     this.mShowLine = true;
