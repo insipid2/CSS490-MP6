@@ -76,8 +76,8 @@ GameObjectSet.prototype.update = function (aCamera) {
                 // then add it to array
                 // then draw the array in our draw
                 // once drawn, empty the array (during draw())
-// d, n, s
-//                ci.setInfo(this.mSet[j].)
+                // depth, normal, start
+                ci.setInfo(this.mSet[j].)
 //                this.mCollisions.push();
             }
         }

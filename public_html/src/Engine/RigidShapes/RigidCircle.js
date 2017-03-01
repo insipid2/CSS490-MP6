@@ -23,6 +23,10 @@ RigidCircle.prototype.travel = function (dt) {
     return this;
 };
 
+RigidCircle.prototype.getRadius = function () {
+    return this.mRadius;
+};
+
 RigidCircle.prototype.draw = function (aCamera) {
     RigidShape.prototype.draw.call(this, aCamera);
     
