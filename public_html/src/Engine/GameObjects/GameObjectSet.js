@@ -15,6 +15,7 @@ function GameObjectSet() {
     this.mCollisions = [];
     this.mHasCollision = false;
     this.mSelectedObj = 0;
+    this.mOutTrash = [0, 0];
 }
 
 GameObjectSet.prototype.size = function () {
@@ -76,6 +77,7 @@ GameObjectSet.prototype.update = function (aCamera) {
     var depth = null;
     var normal = [0, 0];
     var start = [0, 0];
+    var infoColor = [1, 0, 1, 1];
     
     // circle vars   
     var c1Rad = null;
@@ -86,6 +88,7 @@ GameObjectSet.prototype.update = function (aCamera) {
     // rectangle vars
     var ciR1 = null;
     var ciR2 = null;
+    var depthVec = [0, 0];
 
     for (var i = 0; i < this.mSet.length; i++) {
         for (var j = i + 1; j < this.mSet.length; j++) {
@@ -93,6 +96,8 @@ GameObjectSet.prototype.update = function (aCamera) {
             if (this.mSet[i].getRigidBody().boundTest(this.mSet[j].getRigidBody())) {
                 this.mHasCollision = true;
                 ci = new CollisionInfo();
+                ciR1 = new CollisionInfo();
+                ciR2 = new CollisionInfo();
                 // test for collision type
                 // shape types: RigidCircle, RigidRectangle
                 if (this.mSet[i].getRigidBody().mType === "RigidCircle" &&
@@ -118,7 +123,7 @@ GameObjectSet.prototype.update = function (aCamera) {
                     console.log("c1Pos: " + c1Pos + ", c2Pos: " + c2Pos);
                     console.log("c1x: " + c1Pos[0] + ", c1y: " + c1Pos[1]);
                     console.log("radsum: " + radsum + ", dist: " + dist + ", depth: " + depth + ", normal: " + normal);
-                    ci.setInfo(depth, normal, start, [1, 0, 1, 1]);
+                    ci.setInfo(depth, normal, start, infoColor);
                     this.mCollisions.push(ci);
                 }
                 else if (this.mSet[i].getRigidBody().mType === "RigidCircle" &&
@@ -132,7 +137,27 @@ GameObjectSet.prototype.update = function (aCamera) {
                 else if (this.mSet[i].getRigidBody().mType === "RigidRectangle" &&
                         this.mSet[j].getRigidBody().mType === "RigidRectangle"){
                     // Rectangle - Rectangle collision
-                    this.findAxisLeastPenetration(this.mSet[i].getRigidBody(), this.mSet[j].getRigidBody(), ci, tmpSupport1);
+                    var status1 = false;
+                    var status2 = false;
+                    
+                    status1 = this.findAxisLeastPenetration(this.mSet[i].getRigidBody(), this.mSet[j].getRigidBody(), ciR1, tmpSupport1);
+                    // console.log("after status 1 assignment");
+                    if (status1) {
+                        status2 = this.findAxisLeastPenetration(this.mSet[j].getRigidBody(), this.mSet[i].getRigidBody(), ciR2, tmpSupport2);
+                        if (status2) {
+                            if (ciR1.getDepth() < ciR2.getDepth()) {
+                                vec2.scale(depthVec, ciR1.getNormal(), ciR1.getDepth());
+                                console.log("ciR1 is shortest");
+                                ci.setInfo(ciR1.getDepth(), vec2.scale(ciR1.getNormal(), ciR1.getNormal(), -1), vec2.subtract(this.mOutTrash, ciR1.mStart, depthVec), infoColor);
+                            }
+                            else {
+                                // ci.setInfo(ciR2.getDepth(), vec2.scale(this.mOutTrash, ciR2.getNormal(), -1), ciR2.mStart);
+                                ci.setInfo(ciR2.getDepth(), ciR2.getNormal(), ciR2.mStart, infoColor);
+                                console.log("ciR2 is shortest");
+                            }
+                            this.mCollisions.push(ci);
+                        }
+                    }
                 }
             }
         }
@@ -150,16 +175,16 @@ var tmpSupport2 = new SupportStruct();
 
 GameObjectSet.prototype.findSupportPoint = function (rec, dir, ptOnEdge, tmpSupport) {
     //the longest project length
-    var vToEdge;
+    var vToEdge = [0, 0];
     var projection;
 
     tmpSupport.mSupportPointDist = -9999999;
     tmpSupport.mSupportPoint = null;
+    
     //check each vector of other object
     for (var i = 0; i < rec.mVertex.length; i++) {
-        vToEdge = rec.mVertex[i].subtract(ptOnEdge);
+        vec2.subtract(vToEdge, rec.mVertex[i], ptOnEdge);
         projection = vec2.dot(vToEdge, dir);
-        
         //find the longest distance with certain edge
         //dir is -n direction, so the distance should be positive       
         if ((projection > 0) && (projection > tmpSupport.mSupportPointDist)) {
@@ -177,22 +202,20 @@ GameObjectSet.prototype.findAxisLeastPenetration = function (rec1, rec2, collisi
     
     var bestDistance = 999999;
     var bestIndex = null;
+    var bestVec = [0, 0];
+    var bestStart = [0, 0];
 
     var hasSupport = true;
     var i = 0;
-    
-    var out = [0, 0];
     
     while ((hasSupport) && (i < rec1.mFaceNormal.length)) {
         
         // get facenormal from rec1
         n = rec1.mFaceNormal[i];
-        console.log("facenormal: " + n);
         
         // get direction, pointing out instead of in
         vec2.scale(dir, n, -1);
         ptOnEdge = rec1.mVertex[i];
-        console.log("direction: " + dir);
         
         // find support point
         this.findSupportPoint(rec2, dir, ptOnEdge, tmpSupport);
@@ -209,8 +232,13 @@ GameObjectSet.prototype.findAxisLeastPenetration = function (rec1, rec2, collisi
     
     if (hasSupport) {
         //all four directions have support point
-        var bestVec = vec2.scale(rec1.mFaceNormal[bestIndex], bestDistance);
-        collisionInfo.setInfo(bestDistance, rec1.mFaceNormal[bestIndex], vec2.add(out, supportPoint, bestVec));
+        vec2.scale(bestVec, rec1.mFaceNormal[bestIndex], bestDistance);
+        vec2.add(bestStart, supportPoint, bestVec)
+        console.log("best distance: " + bestDistance);
+        console.log("normal: " + rec1.mFaceNormal[bestIndex]);
+        console.log("best start: " + bestStart);
+        collisionInfo.setInfo(bestDistance, rec1.mFaceNormal[bestIndex], bestStart, [1, 0, 1, 1]);
+        console.log("stop");
     }
     return hasSupport;
 };

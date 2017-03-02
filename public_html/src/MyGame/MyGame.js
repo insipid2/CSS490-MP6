@@ -12,6 +12,8 @@
 "use strict";  // Operate in Strict mode such that variables must be declared before used!
 
 function MyGame() {
+    console.log("game start");
+    
     this.kMinionSprite = "assets/minion_sprite.png";
     
     // The camera to view the scene

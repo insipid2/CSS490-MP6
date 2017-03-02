@@ -76,7 +76,7 @@ CollisionInfo.prototype.setInfo = function (d, n, s, color) {
     vec2.scaleAndAdd(this.mEnd, s, n, -d);
     // x1, y1, x2, y2
     this.mLine = new LineRenderable(s[0], s[1], this.mEnd[0], this.mEnd[1]);
-    this.mLine.setColor([1, 0, 1, 1]);
+    this.mLine.setColor(color);
     this.mStartMark = new Renderable();
     this.mStartMark.getXform().setPosition(this.mStart[0], this.mStart[1]);
     this.mStartMark.getXform().setSize(0.75, 0.75);
